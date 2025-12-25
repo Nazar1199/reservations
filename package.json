@@ -17,9 +17,19 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "infra:up": "docker compose up -d postgres redis rabbitmq",
+    "infra:down": "docker compose down",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "migration:generate": "npm run typeorm -- migration:generate -n",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
+    "@nestjs/cache-manager": "^3.1.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -29,6 +39,7 @@
     "@nestjs/typeorm": "^11.0.0",
     "amqp-connection-manager": "^5.0.0",
     "amqplib": "^0.10.9",
+    "cache-manager-redis-store": "^3.0.1",
     "class-validator": "^0.14.3",
     "ioredis": "^5.8.2",
     "pg": "^8.16.3",
@@ -39,7 +50,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
-    "@nestjs/cli": "^11.0.0",
+    "@nestjs/cli": "^11.0.14",
+    "webpack": "^5.99.9",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
     "@types/express": "^5.0.0",

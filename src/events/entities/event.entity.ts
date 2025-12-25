@@ -16,7 +16,7 @@ export class Event {
   @Min(1)
   total_seats: number;
 
-  @OneToMany(() => Booking, booking => booking.event)
+  @OneToMany(() => Booking, (booking) => booking.event)
   bookings: Booking[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
