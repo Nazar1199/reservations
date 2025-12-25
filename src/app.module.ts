@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CacheModule } from '@nestjs/cache-manager';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { redisStore } from 'cache-manager-redis-store';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EventsModule } from './events/events.module';
 import { BookingsModule } from './bookings/bookings.module';
+import { MessagingModule } from './messaging/messaging.module';
 
 @Module({
   imports: [
@@ -35,19 +34,6 @@ import { BookingsModule } from './bookings/bookings.module';
       inject: [ConfigService],
     }),
 
-    // Redis
-    CacheModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        store: redisStore,
-        host: configService.get('REDIS_HOST'),
-        port: configService.get('REDIS_PORT'),
-        ttl: configService.get('REDIS_TTL'),
-        isGlobal: true,
-      }),
-      inject: [ConfigService],
-    }),
-
     // RabbitMQ
     ClientsModule.registerAsync([
       {
@@ -69,6 +55,7 @@ import { BookingsModule } from './bookings/bookings.module';
 
     EventsModule,
     BookingsModule,
+    MessagingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
