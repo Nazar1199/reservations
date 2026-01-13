@@ -20,6 +20,11 @@ export class BookingsController {
     return this.bookingsService.findByUserId(userId);
   }
 
+  @Get('event/top')
+  async getTop(): Promise<any> {
+    return this.bookingsService.findTop('');
+  }
+
   @Get('event/:eventId')
   async findByEventId(@Param('eventId', ParseIntPipe) eventId: number): Promise<Booking[]> {
     return this.bookingsService.findByEventId(eventId);

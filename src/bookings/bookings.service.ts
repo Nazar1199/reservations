@@ -9,6 +9,7 @@ import { BookingLockService } from './booking-lock.service';
 import { BookingValidationService, CreateBookingData } from './booking-validation.service';
 import { RabbitMQService } from '../messaging/rabbitmq.service';
 import { MessageData } from '../messaging/interfaces/rabbitmq.interface';
+import { groupBy } from 'rxjs';
 
 @Injectable()
 export class BookingsService {
@@ -78,6 +79,25 @@ export class BookingsService {
       relations: ['event'],
       order: { created_at: 'DESC' },
     });
+  }
+
+  async findTop(filter: string): Promise<any> {
+    const topUsers = await this.bookingRepository      
+      .createQueryBuilder('booking')
+      .select('booking.user_id', 'user_id')
+      .addSelect('COUNT(booking.id)', 'count')
+      .groupBy('booking.user_id')
+      .orderBy('count', 'DESC')
+      .limit(10)
+      .getRawMany();
+      
+    const res = topUsers.map((u, index) => ({
+    user_id: u.user_id,
+    count: parseInt(u.count),
+    place: index + 1,
+  }));
+
+  return res;
   }
 
   /**
